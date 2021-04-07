@@ -122,13 +122,39 @@ class board():
             eval(n+f'({i[0]}, {i[1]}, {i[2]}, n)') for i, n in pieces.items()  # pawn(1, 0, 0)
         ]
 
-
     def info(self):
         res = []
         for i in self.board:
             res.append((np.hstack([i.coordinate.coor, i.color]), i.name))
             print(i.name)
         return res
+
+    def piece(self, coor):  # coor = [a, b]
+        res = None
+        for piece in self.board:
+            if piece.coordinate.coor == coor:
+                res = piece
+        return res
+
+    def possibleMoves(self, coord):
+        for i in range(len(self.board)):
+            if coord == self.board[i].coordinate.coor:
+                current_piece = self.board[i]  # нашли фигуру
+                piece_number = i  # её номер
+                break
+        pieces = self.info()
+        pieces_coor = []
+        for i in range(len(pieces)):
+            pieces_coor.append(pieces[i][0][:2])
+        pieces_coor = np.array(pieces_coor)
+        all_moves = current_piece.all_moves()
+        if current_piece.name == 'pawn':
+            for m in all_moves:
+                if m in pieces_coor:
+                    b_piece = self.piece(m)
+
+
+
 
 
 pieces = {(1, 0, 0): 'pawn', (1, 1, 0): 'pawn', (0, 0, 0): 'rook'}
