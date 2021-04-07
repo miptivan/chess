@@ -1,4 +1,5 @@
 import numpy as np
+import sys
 
 
 class coordinates():
@@ -23,10 +24,12 @@ king_moves = [np.array([0, 1]), np.array([1, 0]), np.array([1, 1]), np.array([1,
 
 
 class piece():
-    def __init__(self, i, j, color):
-        self.coordinate = coordinates(i, j) # np.array [i, j]
-        self.color = color # 0 - white, 1 - black
+    def __init__(self, i, j, color, name='123'):
+        self.coordinate = coordinates(i, j)  # np.array [i, j]
+        self.color = color  # 0 - white, 1 - black
         self.first_move = 0
+        self.name = name
+
 
     def all_moves(self):
         pass
@@ -79,7 +82,7 @@ class knight(piece):
     knight_moves = [np.array([2, 1]), np.array([1, 2]), np.array([-2, 1]), np.array([-1, 2])]
 
     def all_moves(self):
-        nonlocal knight_moves
+        #nonlocal knight_moves
         mvs = []
         for m in knight_moves:
             mvs.append(self.coordinate.add(m))
@@ -114,7 +117,21 @@ class bishop(piece):
 
 
 class board():
-    def __init__(self):
-        self.board = [
-            d
+    def __init__(self, pieces):  # pieces = {[1, 0, 0]: 'pawn', [1, 1, 0]: 'pawn', [0, 0, 0]: 'rook', [0, 1]: 'knight'}
+       self.board = [
+            eval(n+f'({i[0]}, {i[1]}, {i[2]}, n)') for i, n in pieces.items()  # pawn(1, 0, 0)
         ]
+
+
+    def info(self):
+        res = []
+        for i in self.board:
+            res.append((np.hstack([i.coordinate.coor, i.color]), i.name))
+            print(i.name)
+        return res
+
+
+pieces = {(1, 0, 0): 'pawn', (1, 1, 0): 'pawn', (0, 0, 0): 'rook'}
+myboard = board(pieces)
+print(myboard.info())
+
